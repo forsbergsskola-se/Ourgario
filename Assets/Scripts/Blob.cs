@@ -8,6 +8,7 @@ public class Blob : MonoBehaviour
 {
     public Vector2 direction { get; set; }
     private float _size = 1f;
+    public string Guid { get;set; }
 
     public float Size
     {

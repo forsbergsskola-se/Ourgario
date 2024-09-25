@@ -1,10 +1,10 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class JoinButton : MonoBehaviour
 {
-    public InputField hostIpInputField;
+    public TMP_InputField hostIpInputField;
     public void OnButtonClick()
     {
         SceneManager.LoadScene("Game");

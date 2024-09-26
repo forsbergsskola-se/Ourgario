@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -26,9 +27,15 @@ public class GameSession : MonoBehaviour
     #region    ------ Client -------
     private IPEndPoint _serverEndpoint;
     #endregion
+    
+    #region    ------ Server -------
+    private Dictionary<IPEndPoint, OpponentController> _opponents = new();
+    #endregion
 
     private async void FixedUpdate()
     {
+        if (!_finishedLoading) return;
+        
         if (_isServer)
             await ReceivePositions();
         else
@@ -37,14 +44,32 @@ public class GameSession : MonoBehaviour
 
     private async Task ReceivePositions()
     {
-        
+        while (_udpClient.Available > 0)
+        {
+            var receiveResult = await _udpClient.ReceiveAsync();
+            var fromEndpoint = receiveResult.RemoteEndPoint;
+            var bytes = receiveResult.Buffer;  // A7 A3 A8 A9 B8 47 38 91 04 ( 010101010 10101 1001 10101010 1010101010 )
+            var chars = Encoding.UTF8.GetString(bytes); // "{"x":13.2,"y":9.7}"
+            var position = JsonUtility.FromJson<Vector3>(chars); // Vector2 object with two fields: x: 13.2f y: 9,7f
+            EnsureOpponentAndUpdatePosition(fromEndpoint, position);
+        }
+    }
+
+    private void EnsureOpponentAndUpdatePosition(IPEndPoint opponentEndpoint, Vector3 opponentPosition)
+    {
+        if (!_opponents.TryGetValue(opponentEndpoint, out var opponentController)) // Is there 192.168.1.72 -----> Prefab of Opponent?
+        { // If not:
+            opponentController = SpawnOpponent(); // Create Prefab of Opponent
+            _opponents[opponentEndpoint] = opponentController; // Assign 192.168.1.72 -----> Prefab of Opponent
+        }
+        opponentController.transform.position = opponentPosition;
     }
 
     private async Task SendPositionToServer()
     {
-        var position = _playerController.transform.position; //vector2 object with 2 fields : x:13.2f y: 9.7f
-        var chars = JsonUtility.ToJson(position); // "{"x":13.2, "y":9.7}"
-        var bytes = Encoding.UTF8.GetBytes(chars); //A7 A3 A8 A9 B9 47 3B 91 04 (00100100 00100100 00100100 00100100 00100100)
+        var position = _playerController.transform.position; // Vector2 object with two fields: x: 13.2f y: 9,7f
+        var chars = JsonUtility.ToJson(position); // "{"x":13.2,"y":9.7}"
+        var bytes = Encoding.UTF8.GetBytes(chars); // A7 A3 A8 A9 B8 47 38 91 04 ( 010101010 10101 1001 10101010 1010101010 )
         await _udpClient.SendAsync(bytes, bytes.Length, _serverEndpoint);
     } 
 
@@ -58,6 +83,12 @@ public class GameSession : MonoBehaviour
     private static PlayerController SpawnPlayer()
     {
         var prefab = Resources.Load<PlayerController>("Player");
+        return Instantiate(prefab);
+    }
+
+    private static OpponentController SpawnOpponent()
+    {
+        var prefab = Resources.Load<OpponentController>("Opponent");
         return Instantiate(prefab);
     }
     

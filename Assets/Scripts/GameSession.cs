@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using UnityEditor.VersionControl;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Task = System.Threading.Tasks.Task;
 
 /// <summary>
 /// This is a MonoBehaviour.
@@ -22,31 +22,27 @@ public class GameSession : MonoBehaviour
     private UdpClient _udpClient;
     private bool _isServer;
     
-    #region ----- Client -----
-    private IPEndPoint _serverEndPoint;
+    #region    ------ Client -------
+    private IPEndPoint _serverEndpoint;
     #endregion
 
     private async void FixedUpdate()
     {
         if (_isServer)
-        {
-            await ReceivePositionsToServer();
-        }
+            await ReceivePositions();
         else
-        {
-            await SendPositionsToServer();
-        }
+            await SendPositionToServer();
     }
 
-    private async Task ReceivePositionsToServer()
+    private async Task ReceivePositions()
     {
         
     }
-    
-    private async Task SendPositionsToServer()
+
+    private async Task SendPositionToServer()
     {
         
-    }
+    } 
 
     private static GameSession CreateNew()
     {
@@ -64,24 +60,30 @@ public class GameSession : MonoBehaviour
     public static void HostGame()
     {
         var session = CreateNew();
-        session.StartCoroutine(session.Co_HostGame());
+        session._isServer = true;
+        session._udpClient = new UdpClient(portNumber);
+        session.StartCoroutine(session.Co_LaunchGame());
     }
 
-    private IEnumerator Co_HostGame()
+    private IEnumerator Co_LaunchGame()
     {
         yield return SceneManager.LoadSceneAsync("Game");
-        var player = SpawnPlayer();
+        _playerController = SpawnPlayer();
+        _finishedLoading = true;
     }
 
+    private static IPEndPoint GetIPEndPoint(string hostName, int port)
+    {
+        var address = Dns.GetHostAddresses(hostName).First();
+        return new IPEndPoint(address, port);
+    }
+    
     public static void JoinGame(string hostName)
     {
         var session = CreateNew();
-        session.StartCoroutine(session.Co_JoinGame(hostName));
-    }
-
-    private IEnumerator Co_JoinGame(string hostName)
-    {
-        yield return SceneManager.LoadSceneAsync("Game");
-        var player = SpawnPlayer();
+        session._isServer = false;
+        session._udpClient = new UdpClient();
+        session._serverEndpoint = GetIPEndPoint(hostName, portNumber);
+        session.StartCoroutine(session.Co_LaunchGame());
     }
 }

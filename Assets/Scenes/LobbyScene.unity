@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 002d118ae8225534c852ca1338c72be3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hostIPAddress: {fileID: 710399593}
+  hostIpLabel: {fileID: 710399593}
 --- !u!1 &583920682
 GameObject:
   m_ObjectHideFlags: 0
@@ -1507,7 +1507,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1597877377}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1597877379}
+        m_TargetAssemblyTypeName: JoinButton, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1597877377
 MonoBehaviour:
   m_ObjectHideFlags: 0

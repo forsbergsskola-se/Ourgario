@@ -24,7 +24,7 @@ public class HostButton : MonoBehaviour
 
     private IEnumerator Co_StartHosting()
     {
-        yield return SceneManager.LoadSceneAsync("Game");
+        yield return SceneManager.LoadSceneAsync("GameScene");
         var playerPrefab = Resources.Load<PlayerController>("Player");
         var player = Instantiate(playerPrefab);
     }

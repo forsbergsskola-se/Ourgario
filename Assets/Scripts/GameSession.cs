@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -41,7 +42,10 @@ public class GameSession : MonoBehaviour
 
     private async Task SendPositionToServer()
     {
-        
+        var position = _playerController.transform.position; //vector2 object with 2 fields : x:13.2f y: 9.7f
+        var chars = JsonUtility.ToJson(position); // "{"x":13.2, "y":9.7}"
+        var bytes = Encoding.UTF8.GetBytes(chars); //A7 A3 A8 A9 B9 47 3B 91 04 (00100100 00100100 00100100 00100100 00100100)
+        await _udpClient.SendAsync(bytes, bytes.Length, _serverEndpoint);
     } 
 
     private static GameSession CreateNew()
@@ -67,7 +71,7 @@ public class GameSession : MonoBehaviour
 
     private IEnumerator Co_LaunchGame()
     {
-        yield return SceneManager.LoadSceneAsync("Game");
+        yield return SceneManager.LoadSceneAsync("GameScene");
         _playerController = SpawnPlayer();
         _finishedLoading = true;
     }

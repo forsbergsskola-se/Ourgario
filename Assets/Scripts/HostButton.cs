@@ -12,9 +12,7 @@ public class HostButton : MonoBehaviour
 
     void Start()
     {
-        hostIpLabel.text = Dns.GetHostEntry(Dns.GetHostName()).AddressList
-            .First()
-            .ToString();
+        hostIpLabel.text = Dns.GetHostEntry(Dns.GetHostName()).AddressList.First().ToString();
     }
     
     public void OnButtonClick()

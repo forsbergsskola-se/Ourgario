@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using TMPro;
@@ -12,8 +11,19 @@ public class HostButton : MonoBehaviour
 
     void Start()
     {
-        hostIpLabel.text = Dns.GetHostEntry(Dns.GetHostName()).AddressList.First().ToString();
+        var addresses = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
+        var ipv4Address = addresses.FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+    
+        if (ipv4Address != null)
+        {
+            hostIpLabel.text = ipv4Address.ToString();
+        }
+        else
+        {
+            hostIpLabel.text = "No IPv4 Address Found";
+        }
     }
+
     
     public void OnButtonClick()
     {
@@ -25,5 +35,6 @@ public class HostButton : MonoBehaviour
         yield return SceneManager.LoadSceneAsync("GameScene");
         var playerPrefab = Resources.Load<PlayerController>("Player");
         var player = Instantiate(playerPrefab);
+        GameSession.HostGame();
     }
 }

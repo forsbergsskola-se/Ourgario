@@ -3,7 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(Blob))]
 public class PlayerController : MonoBehaviour
 {
-    private bool _isServer;
     private Blob _blob;
     
     private void Start()

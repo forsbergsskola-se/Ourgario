@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -2524147083246412667}
   - component: {fileID: 7552719125355348789}
   m_Layer: 0
-  m_Name: Blob
+  m_Name: BlobCollect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 1597274694977390588}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.15, y: 1.16, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.8490566, g: 0.062477656, b: 0.062477656, a: 1}
+  m_Color: {r: 0.6981132, g: 0.40503737, b: 0.40503737, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -161,4 +161,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc7c4cf8fab14274f8d7b1762e9e0444, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _size: 0.2
   baseSpeed: 3

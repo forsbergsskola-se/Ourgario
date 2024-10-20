@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: ChatProject
+  productName: Ourgario
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -722,7 +722,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: ChatProject
-  metroPackageVersion: 
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -730,7 +730,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: ChatProject
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: ChatProject
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
@@ -800,7 +800,7 @@ PlayerSettings:
   cloudProjectId: 7bee9d6a-a8a6-4e18-a626-006510131b66
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: ChatProject
+  projectName: Ourgario
   organizationId: branko-zikic
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0

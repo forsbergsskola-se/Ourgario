@@ -19,7 +19,7 @@ public class GameSession : MonoBehaviour
     #region Client
     private IPEndPoint _serverEndpoint;
     #endregion
-    
+
     #region Server
     private Dictionary<IPEndPoint, OpponentController> _opponents = new();
     #endregion
@@ -27,7 +27,7 @@ public class GameSession : MonoBehaviour
     private async void FixedUpdate()
     {
         if (!_finishedLoading) return;
-        
+
         if (_isServer)
             await ReceivePositions();
         else
@@ -63,7 +63,7 @@ public class GameSession : MonoBehaviour
         var chars = JsonUtility.ToJson(position);
         var bytes = Encoding.UTF8.GetBytes(chars);
         await _udpClient.SendAsync(bytes, bytes.Length, _serverEndpoint);
-    } 
+    }
 
     private static GameSession CreateNew()
     {
@@ -83,21 +83,12 @@ public class GameSession : MonoBehaviour
         var prefab = Resources.Load<OpponentController>("Opponent");
         return Instantiate(prefab);
     }
-    
+
     public static void HostGame()
     {
         var session = CreateNew();
         session._isServer = true;
         session._udpClient = new UdpClient(portNumber);
-        session.StartCoroutine(session.Co_LaunchGame());
-    }
-
-    public static void JoinGame(string hostName)
-    {
-        var session = CreateNew();
-        session._isServer = false;
-        session._udpClient = new UdpClient();
-        session._serverEndpoint = GetIPEndPoint(hostName, portNumber);
         session.StartCoroutine(session.Co_LaunchGame());
     }
 
@@ -114,12 +105,12 @@ public class GameSession : MonoBehaviour
         return new IPEndPoint(address, port);
     }
 
-    private void RemoveDisconnectedOpponent(IPEndPoint opponentEndpoint)
+    public static void JoinGame(string hostName)
     {
-        if (_opponents.TryGetValue(opponentEndpoint, out var opponentController))
-        {
-            Destroy(opponentController.gameObject);
-            _opponents.Remove(opponentEndpoint);
-        }
+        var session = CreateNew();
+        session._isServer = false;
+        session._udpClient = new UdpClient();
+        session._serverEndpoint = GetIPEndPoint(hostName, portNumber);
+        session.StartCoroutine(session.Co_LaunchGame());
     }
 }

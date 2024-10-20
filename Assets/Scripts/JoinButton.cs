@@ -6,13 +6,13 @@ using UnityEngine.SceneManagement;
 public class JoinButton : MonoBehaviour
 {
     public TMP_InputField hostIpInputField;
-    
+
     public void OnButtonClick()
     {
-        StartCoroutine(Co_StartHosting());
+        StartCoroutine(Co_JoinGame());
     }
 
-    private IEnumerator Co_StartHosting()
+    private IEnumerator Co_JoinGame()
     {
         yield return SceneManager.LoadSceneAsync("GameScene");
         var playerPrefab = Resources.Load<PlayerController>("Player");

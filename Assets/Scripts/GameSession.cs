@@ -104,6 +104,29 @@ public class GameSession : MonoBehaviour
         session.StartCoroutine(session.Co_LaunchGame());
         Debug.Log("Joined Game" + hostName);
     }
+    
+    public static bool TryJoinGame(string hostName)
+    {
+        try
+        {
+            var session = CreateNew();
+            session._isServer = false;
+            session._udpClient = new UdpClient();
+            session._serverEndpoint = GetIPEndPoint(hostName, portNumber);
+
+            // Try sending a handshake or ping to check if the host is reachable
+            var handshakeMessage = Encoding.UTF8.GetBytes("Handshake");
+            session._udpClient.Send(handshakeMessage, handshakeMessage.Length, session._serverEndpoint);
+
+            // If no exception was thrown, the connection is successful
+            return true;
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"Failed to join game: {ex.Message}");
+            return false;
+        }
+    }
 
     private IEnumerator Co_LaunchGame()
     {

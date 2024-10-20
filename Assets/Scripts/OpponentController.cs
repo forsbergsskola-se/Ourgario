@@ -12,6 +12,7 @@ public class OpponentController : MonoBehaviour
 
     void Update()
     {
-        _blob.Direction = Vector2.right;
+        var cursorInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        _blob.Direction = cursorInWorld - transform.position;
     }
 }

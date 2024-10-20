@@ -19,7 +19,7 @@ public class GameSession : MonoBehaviour
     #region Client
     private IPEndPoint _serverEndpoint;
     #endregion
-    
+
     #region Server
     private Dictionary<IPEndPoint, OpponentController> _opponents = new();
     #endregion
@@ -27,7 +27,7 @@ public class GameSession : MonoBehaviour
     private async void FixedUpdate()
     {
         if (!_finishedLoading) return;
-        
+
         if (_isServer)
             await ReceivePositions();
         else
@@ -54,16 +54,19 @@ public class GameSession : MonoBehaviour
             opponentController = SpawnOpponent();
             _opponents[opponentEndpoint] = opponentController;
         }
+
         opponentController.transform.position = opponentPosition;
     }
 
     private async Task SendPositionToServer()
     {
+        if (_playerController == null) return;
+
         var position = _playerController.transform.position;
         var chars = JsonUtility.ToJson(position);
         var bytes = Encoding.UTF8.GetBytes(chars);
         await _udpClient.SendAsync(bytes, bytes.Length, _serverEndpoint);
-    } 
+    }
 
     private static GameSession CreateNew()
     {
@@ -83,7 +86,7 @@ public class GameSession : MonoBehaviour
         var prefab = Resources.Load<OpponentController>("Opponent");
         return Instantiate(prefab);
     }
-    
+
     public static void HostGame()
     {
         var session = CreateNew();
@@ -99,12 +102,14 @@ public class GameSession : MonoBehaviour
         session._udpClient = new UdpClient();
         session._serverEndpoint = GetIPEndPoint(hostName, portNumber);
         session.StartCoroutine(session.Co_LaunchGame());
+        Debug.Log("Joined Game" + hostName);
     }
 
     private IEnumerator Co_LaunchGame()
     {
         yield return SceneManager.LoadSceneAsync("GameScene");
-        _playerController = SpawnPlayer();
+
+        _playerController = SpawnPlayer();  
         _finishedLoading = true;
     }
 

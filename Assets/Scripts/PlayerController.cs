@@ -4,12 +4,12 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Blob _blob;
-
+    
     private void Start()
     {
         _blob = GetComponent<Blob>();
     }
-
+    
     void Update()
     {
         var cursorInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);

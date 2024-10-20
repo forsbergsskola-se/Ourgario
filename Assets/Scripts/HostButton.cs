@@ -11,9 +11,20 @@ public class HostButton : MonoBehaviour
 
     void Start()
     {
-        hostIpLabel.text = Dns.GetHostEntry(Dns.GetHostName()).AddressList.First().ToString();
+        var addresses = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
+        var ipv4Address = addresses.FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+    
+        if (ipv4Address != null)
+        {
+            hostIpLabel.text = ipv4Address.ToString();
+        }
+        else
+        {
+            hostIpLabel.text = "No IPv4 Address Found";
+        }
     }
 
+    
     public void OnButtonClick()
     {
         StartCoroutine(Co_StartHosting());

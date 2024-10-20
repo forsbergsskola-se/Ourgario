@@ -17,7 +17,7 @@ public class JoinButton : MonoBehaviour
         var hostName = hostIpInputField.text;
         GameSession.JoinGame(hostName);
         yield return SceneManager.LoadSceneAsync("GameScene");
-        var playerPrefab = Resources.Load<PlayerController>("Player");
+        var playerPrefab = Resources.Load<OpponentController>("Opponent");
         var player = Instantiate(playerPrefab);
     }
 }
